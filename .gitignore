@@ -1,0 +1,6 @@
+.hg
+.hgtags
+*.o
+*.png
+*~
+dwm
