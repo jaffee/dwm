@@ -938,7 +938,7 @@ getatomprop(Client *c, Atom prop) {
 	return atom;
 }
 
-XftColor 
+XftColor
 getcolor(const char *colstr) {
 	XftColor color;
 
@@ -2162,18 +2162,18 @@ main(int argc, char *argv[]) {
 }
 
 
-/* Following 3 methods are from 
+/* Following 3 methods are from
  * http://ap0calypse.agitatio.org/articles/2012/08/17/cycle-through-your-tags-in-dwm.html
  * for cycling through tags as though there were simply workspaces
  */
 static void x_prevtag(const Arg *arg) {
     (void)arg;
-    x_adjtag(-1);    
+    x_adjtag(-1);
 }
 
 static void x_nexttag(const Arg *arg) {
     (void)arg;
-    x_adjtag(+1);    
+    x_adjtag(+1);
 }
 
 static void x_adjtag(int n) {
@@ -2198,35 +2198,37 @@ static void x_adjtag(int n) {
             }
         }
 
-	/* Jaffee's addition - only cycle up to the highest tag with a client
-	 * then wrap around.
+	/* Jaffee's addition - only cycle through tags with clients
 	 */
-	unsigned int v = (selmon->tagset[selmon->seltags] & TAGMASK);
+	unsigned int all_tags = selmon->tagset[selmon->seltags];
 	Client *c = selmon->clients;
-	fprintf(stderr, "client c tags %d\n", c->tags);
 
+	// create mask representing all tags that have a client by
+	// bitwise OR-ing all client's tags
 	while(c){
-	  fprintf(stderr, "client name is %s\n", c->name);
-	  v |= c->tags;
+	  all_tags |= c->tags;
 	  c = c->next;
 	}
 
 	int highest_set = 0;
-	fprintf(stderr, "before loop v=%u\n", v);
 
-	v &= TAGMASK;
+	all_tags &= TAGMASK;
+	unsigned int v = all_tags;
 	while (v) {
 	  v = v >> 1;
 	  highest_set++;
 	}
-
-	fprintf(stderr, "after loop %d\n\n", highest_set);
 
         /*
          *      * Calculate next selected tag wrapping around
          *           * when tag overflows.
          *                */
         seltag = (seltag + n) % (int)highest_set;
+
+	// skip tags with no clients
+	while(!((all_tags >> seltag) & 1))
+	  seltag++;
+
         if (seltag < 0)
             seltag += LENGTH(tags);
 

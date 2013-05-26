@@ -10,7 +10,7 @@ static const char selbordercolor[]  = "#005577";
 static const char selbgcolor[]      = "#005577";
 static const char selfgcolor[]      = "#eeeeee";
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int snap      = 32;       /* snap pixel */
+static const unsigned int snap      = 24;       /* snap pixel */
 static const Bool showbar           = True;     /* False means no bar */
 static const Bool topbar            = True;     /* False means bottom bar */
 
@@ -30,7 +30,7 @@ static const Rule rules[] = {
 /* layout(s) */
 static const float mfact      = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster      = 1;    /* number of clients in master area */
-static const Bool resizehints = True; /* True means respect size hints in tiled resizals */
+static const Bool resizehints = False; /* True means respect size hints in tiled resizals */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
@@ -59,17 +59,19 @@ static const char *slock[]    = { "slock", NULL };
 static const char *volupcmd[]  = { "aumix", "-v", "+5", NULL };
 static const char *voldowncmd[]  = { "aumix", "-v", "-5", NULL };
 static const char *mutecmd[]  = { "aumix", "-v", "0", NULL };
+static const char *timecmd[] = { "xsetrootcurtime", NULL };
 
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ WINKEY,			XK_g, 	   setlayout,	   {.v = &layouts[3] } },
+	{ WINKEY,                       XK_z,      spawn,          {.v = timecmd } },
 	{ WINKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
 	{ WINKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ WINKEY|ShiftMask,             XK_l,      spawn,          {.v = slock } },
 	{ WINKEY,                       XK_b,      togglebar,      {0} },
 	{ WINKEY,                       XK_j,      focusstack,     {.i = +1 } },
-	{ WINKEY,                       XK_Tab,    focusstack,     {.i = +1 } },
+	{ MODKEY,                       XK_Tab,    focusstack,     {.i = +1 } },
 	{ WINKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ WINKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 	{ WINKEY,                       XK_d,      incnmaster,     {.i = -1 } },
@@ -91,7 +93,7 @@ static Key keys[] = {
         {0,                             XF86XK_AudioRaiseVolume, spawn, {.v = volupcmd} },
         {0,                             XF86XK_AudioMute, spawn, {.v = mutecmd} },
         {0,                             XF86XK_AudioLowerVolume, spawn, {.v = voldowncmd} },
-	{ MODKEY,                       XK_Tab,    x_nexttag,       {0} },
+	{ WINKEY,                       XK_Tab,    x_nexttag,       {0} },
         { MODKEY|ShiftMask,             XK_Tab,    x_prevtag,       {0} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
